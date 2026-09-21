@@ -1,0 +1,473 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA0000000000000000000014 /* InkReaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000013 /* InkReaderApp.swift */; };
+		AA0000000000000000000017 /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000016 /* Book.swift */; };
+		AA0000000000000000000019 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000018 /* Bookmark.swift */; };
+		AA000000000000000000001B /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000001A /* Collection.swift */; };
+		AA000000000000000000001D /* ReadingSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000001C /* ReadingSettings.swift */; };
+		AA0000000000000000000020 /* AnnotationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000001F /* AnnotationStore.swift */; };
+		AA0000000000000000000022 /* BackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000021 /* BackupService.swift */; };
+		AA0000000000000000000024 /* BookImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000023 /* BookImporter.swift */; };
+		AA0000000000000000000026 /* ChapterParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000025 /* ChapterParser.swift */; };
+		AA0000000000000000000028 /* CollectionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000027 /* CollectionStore.swift */; };
+		AA000000000000000000002A /* ComicExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000029 /* ComicExtractor.swift */; };
+		AA000000000000000000002C /* EPUBParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000002B /* EPUBParser.swift */; };
+		AA000000000000000000002E /* LibraryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000002D /* LibraryStore.swift */; };
+		AA0000000000000000000030 /* SpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000002F /* SpeechService.swift */; };
+		AA0000000000000000000032 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000031 /* Storage.swift */; };
+		AA0000000000000000000034 /* TextEncodingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000033 /* TextEncodingDetector.swift */; };
+		AA0000000000000000000036 /* TxtPaginator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000035 /* TxtPaginator.swift */; };
+		AA0000000000000000000039 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000038 /* Color+Hex.swift */; };
+		AA000000000000000000003B /* VolumeKeyObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000003A /* VolumeKeyObserver.swift */; };
+		AA000000000000000000003F /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000003E /* BackupView.swift */; };
+		AA0000000000000000000041 /* CollectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000040 /* CollectionsView.swift */; };
+		AA0000000000000000000043 /* LibrarySidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000042 /* LibrarySidebarView.swift */; };
+		AA0000000000000000000045 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000044 /* LibraryView.swift */; };
+		AA0000000000000000000048 /* ComicReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000047 /* ComicReaderView.swift */; };
+		AA000000000000000000004A /* PageTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000049 /* PageTextView.swift */; };
+		AA000000000000000000004C /* PdfReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000004B /* PdfReaderView.swift */; };
+		AA000000000000000000004E /* PdfSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000004D /* PdfSearchView.swift */; };
+		AA0000000000000000000050 /* ReaderContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000004F /* ReaderContainerView.swift */; };
+		AA0000000000000000000052 /* ReaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000051 /* ReaderViewModel.swift */; };
+		AA0000000000000000000054 /* TxtPagedReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000053 /* TxtPagedReader.swift */; };
+		AA0000000000000000000056 /* TxtScrollReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000055 /* TxtScrollReader.swift */; };
+		AA0000000000000000000059 /* AnnotationCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000058 /* AnnotationCanvasView.swift */; };
+		AA000000000000000000005B /* ChapterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000005A /* ChapterListView.swift */; };
+		AA000000000000000000005D /* LookupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000005C /* LookupView.swift */; };
+		AA000000000000000000005F /* NoteComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000005E /* NoteComposer.swift */; };
+		AA0000000000000000000061 /* SettingsPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000060 /* SettingsPanel.swift */; };
+		AA0000000000000000000063 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000062 /* Assets.xcassets */; };
+		AA0000000000000000000012 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000000000000000000011 /* ZIPFoundation */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AA000000000000000000000F /* InkReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InkReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA0000000000000000000013 /* InkReaderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InkReaderApp.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000016 /* Book.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Book.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000018 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bookmark.swift"; sourceTree = "<group>"; };
+		AA000000000000000000001A /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection.swift"; sourceTree = "<group>"; };
+		AA000000000000000000001C /* ReadingSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReadingSettings.swift"; sourceTree = "<group>"; };
+		AA000000000000000000001F /* AnnotationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnnotationStore.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000021 /* BackupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackupService.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000023 /* BookImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BookImporter.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000025 /* ChapterParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChapterParser.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000027 /* CollectionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollectionStore.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000029 /* ComicExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComicExtractor.swift"; sourceTree = "<group>"; };
+		AA000000000000000000002B /* EPUBParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EPUBParser.swift"; sourceTree = "<group>"; };
+		AA000000000000000000002D /* LibraryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibraryStore.swift"; sourceTree = "<group>"; };
+		AA000000000000000000002F /* SpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SpeechService.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000031 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Storage.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000033 /* TextEncodingDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextEncodingDetector.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000035 /* TxtPaginator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TxtPaginator.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000038 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
+		AA000000000000000000003A /* VolumeKeyObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VolumeKeyObserver.swift"; sourceTree = "<group>"; };
+		AA000000000000000000003E /* BackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackupView.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000040 /* CollectionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollectionsView.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000042 /* LibrarySidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibrarySidebarView.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000044 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibraryView.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000047 /* ComicReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComicReaderView.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000049 /* PageTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PageTextView.swift"; sourceTree = "<group>"; };
+		AA000000000000000000004B /* PdfReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PdfReaderView.swift"; sourceTree = "<group>"; };
+		AA000000000000000000004D /* PdfSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PdfSearchView.swift"; sourceTree = "<group>"; };
+		AA000000000000000000004F /* ReaderContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReaderContainerView.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000051 /* ReaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReaderViewModel.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000053 /* TxtPagedReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TxtPagedReader.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000055 /* TxtScrollReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TxtScrollReader.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000058 /* AnnotationCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnnotationCanvasView.swift"; sourceTree = "<group>"; };
+		AA000000000000000000005A /* ChapterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChapterListView.swift"; sourceTree = "<group>"; };
+		AA000000000000000000005C /* LookupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LookupView.swift"; sourceTree = "<group>"; };
+		AA000000000000000000005E /* NoteComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoteComposer.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000060 /* SettingsPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsPanel.swift"; sourceTree = "<group>"; };
+		AA0000000000000000000062 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Assets.xcassets"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA000000000000000000000D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA0000000000000000000012 /* ZIPFoundation in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA0000000000000000000003 = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000005 /* InkReader */,
+				AA0000000000000000000004 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000004 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000000F /* InkReader.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000015 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000016 /* Book.swift */,
+				AA0000000000000000000018 /* Bookmark.swift */,
+				AA000000000000000000001A /* Collection.swift */,
+				AA000000000000000000001C /* ReadingSettings.swift */,
+			);
+			path = "Models";
+			sourceTree = "<group>";
+		};
+		AA000000000000000000001E /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000001F /* AnnotationStore.swift */,
+				AA0000000000000000000021 /* BackupService.swift */,
+				AA0000000000000000000023 /* BookImporter.swift */,
+				AA0000000000000000000025 /* ChapterParser.swift */,
+				AA0000000000000000000027 /* CollectionStore.swift */,
+				AA0000000000000000000029 /* ComicExtractor.swift */,
+				AA000000000000000000002B /* EPUBParser.swift */,
+				AA000000000000000000002D /* LibraryStore.swift */,
+				AA000000000000000000002F /* SpeechService.swift */,
+				AA0000000000000000000031 /* Storage.swift */,
+				AA0000000000000000000033 /* TextEncodingDetector.swift */,
+				AA0000000000000000000035 /* TxtPaginator.swift */,
+			);
+			path = "Services";
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000037 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000038 /* Color+Hex.swift */,
+				AA000000000000000000003A /* VolumeKeyObserver.swift */,
+			);
+			path = "Utils";
+			sourceTree = "<group>";
+		};
+		AA000000000000000000003C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000003D /* Library */,
+				AA0000000000000000000046 /* Reader */,
+				AA0000000000000000000057 /* Overlays */,
+			);
+			path = "Views";
+			sourceTree = "<group>";
+		};
+		AA000000000000000000003D /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000003E /* BackupView.swift */,
+				AA0000000000000000000040 /* CollectionsView.swift */,
+				AA0000000000000000000042 /* LibrarySidebarView.swift */,
+				AA0000000000000000000044 /* LibraryView.swift */,
+			);
+			path = "Library";
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000046 /* Reader */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000047 /* ComicReaderView.swift */,
+				AA0000000000000000000049 /* PageTextView.swift */,
+				AA000000000000000000004B /* PdfReaderView.swift */,
+				AA000000000000000000004D /* PdfSearchView.swift */,
+				AA000000000000000000004F /* ReaderContainerView.swift */,
+				AA0000000000000000000051 /* ReaderViewModel.swift */,
+				AA0000000000000000000053 /* TxtPagedReader.swift */,
+				AA0000000000000000000055 /* TxtScrollReader.swift */,
+			);
+			path = "Reader";
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000057 /* Overlays */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000058 /* AnnotationCanvasView.swift */,
+				AA000000000000000000005A /* ChapterListView.swift */,
+				AA000000000000000000005C /* LookupView.swift */,
+				AA000000000000000000005E /* NoteComposer.swift */,
+				AA0000000000000000000060 /* SettingsPanel.swift */,
+			);
+			path = "Overlays";
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000005 /* InkReader */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000013 /* InkReaderApp.swift */,
+				AA0000000000000000000015 /* Models */,
+				AA000000000000000000001E /* Services */,
+				AA0000000000000000000037 /* Utils */,
+				AA000000000000000000003C /* Views */,
+				AA0000000000000000000062 /* Assets.xcassets */,
+			);
+			path = "InkReader";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA0000000000000000000002 /* InkReader */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA0000000000000000000007 /* Build configuration list for PBXNativeTarget "InkReader" */;
+			buildPhases = (
+				AA000000000000000000000C /* Sources */,
+				AA000000000000000000000D /* Frameworks */,
+				AA000000000000000000000E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = InkReader;
+			packageProductDependencies = (
+				AA0000000000000000000011 /* ZIPFoundation */,
+			);
+			productName = InkReader;
+			productReference = AA000000000000000000000F /* InkReader.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA0000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					AA0000000000000000000002 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = AA0000000000000000000006 /* Build configuration list for PBXProject "InkReader" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				"zh-Hans",
+			);
+			mainGroup = AA0000000000000000000003;
+			packageReferences = (
+				AA0000000000000000000010 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+			);
+			productRefGroup = AA0000000000000000000004 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA0000000000000000000002 /* InkReader */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AA000000000000000000000E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA0000000000000000000063 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA000000000000000000000C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA0000000000000000000014 /* InkReaderApp.swift in Sources */,
+				AA0000000000000000000017 /* Book.swift in Sources */,
+				AA0000000000000000000019 /* Bookmark.swift in Sources */,
+				AA000000000000000000001B /* Collection.swift in Sources */,
+				AA000000000000000000001D /* ReadingSettings.swift in Sources */,
+				AA0000000000000000000020 /* AnnotationStore.swift in Sources */,
+				AA0000000000000000000022 /* BackupService.swift in Sources */,
+				AA0000000000000000000024 /* BookImporter.swift in Sources */,
+				AA0000000000000000000026 /* ChapterParser.swift in Sources */,
+				AA0000000000000000000028 /* CollectionStore.swift in Sources */,
+				AA000000000000000000002A /* ComicExtractor.swift in Sources */,
+				AA000000000000000000002C /* EPUBParser.swift in Sources */,
+				AA000000000000000000002E /* LibraryStore.swift in Sources */,
+				AA0000000000000000000030 /* SpeechService.swift in Sources */,
+				AA0000000000000000000032 /* Storage.swift in Sources */,
+				AA0000000000000000000034 /* TextEncodingDetector.swift in Sources */,
+				AA0000000000000000000036 /* TxtPaginator.swift in Sources */,
+				AA0000000000000000000039 /* Color+Hex.swift in Sources */,
+				AA000000000000000000003B /* VolumeKeyObserver.swift in Sources */,
+				AA000000000000000000003F /* BackupView.swift in Sources */,
+				AA0000000000000000000041 /* CollectionsView.swift in Sources */,
+				AA0000000000000000000043 /* LibrarySidebarView.swift in Sources */,
+				AA0000000000000000000045 /* LibraryView.swift in Sources */,
+				AA0000000000000000000048 /* ComicReaderView.swift in Sources */,
+				AA000000000000000000004A /* PageTextView.swift in Sources */,
+				AA000000000000000000004C /* PdfReaderView.swift in Sources */,
+				AA000000000000000000004E /* PdfSearchView.swift in Sources */,
+				AA0000000000000000000050 /* ReaderContainerView.swift in Sources */,
+				AA0000000000000000000052 /* ReaderViewModel.swift in Sources */,
+				AA0000000000000000000054 /* TxtPagedReader.swift in Sources */,
+				AA0000000000000000000056 /* TxtScrollReader.swift in Sources */,
+				AA0000000000000000000059 /* AnnotationCanvasView.swift in Sources */,
+				AA000000000000000000005B /* ChapterListView.swift in Sources */,
+				AA000000000000000000005D /* LookupView.swift in Sources */,
+				AA000000000000000000005F /* NoteComposer.swift in Sources */,
+				AA0000000000000000000061 /* SettingsPanel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AA0000000000000000000008 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AA0000000000000000000009 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AA000000000000000000000A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = InkReader/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.inkreader.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = iphoneos iphonesimulator;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA000000000000000000000B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = InkReader/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.inkreader.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = iphoneos iphonesimulator;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA0000000000000000000006 /* Build configuration list for PBXProject "InkReader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000000008 /* Debug */,
+				AA0000000000000000000009 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA0000000000000000000007 /* Build configuration list for PBXNativeTarget "InkReader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000000000000000000000A /* Debug */,
+				AA000000000000000000000B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AA0000000000000000000010 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.19;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AA0000000000000000000011 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA0000000000000000000010 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = AA0000000000000000000001 /* Project object */;
+}

@@ -1,0 +1,58 @@
+name: 编译未签名 ipa
+
+# 没有 Mac 也能拿到安装包：
+# 推到 GitHub 后在 Actions 页面手动点「Run workflow」，
+# 编好的 ipa 会出现在 Artifacts 里，下载到 Windows 上用 Sideloadly
+# 之类的工具拿 Apple ID 签名后装到 iPad。
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+jobs:
+  build:
+    runs-on: macos-14           # GitHub 托管的 macOS 编译机，公开仓库免费
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 静态自检（文件是否漏登记 / 括号配平）
+        run: python3 tools/check_sources.py
+
+      - name: 编译（关闭签名，只要产物）
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project InkReader.xcodeproj \
+            -target InkReader \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            ONLY_ACTIVE_ARCH=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            | tail -n 40
+
+      - name: 确认 .app 出来了
+        run: |
+          ls -la build/Build/Products/Release-iphoneos/
+          test -d build/Build/Products/Release-iphoneos/InkReader.app
+
+      - name: 打成 ipa
+        run: |
+          cd build/Build/Products/Release-iphoneos
+          mkdir -p Payload
+          cp -R InkReader.app Payload/
+          zip -qry "$GITHUB_WORKSPACE/InkReader-unsigned.ipa" Payload
+          cd "$GITHUB_WORKSPACE"
+          ls -lh InkReader-unsigned.ipa
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: InkReader-unsigned-ipa
+          path: InkReader-unsigned.ipa
+          retention-days: 30

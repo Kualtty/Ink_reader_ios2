@@ -1,0 +1,20 @@
+# Xcode
+build/
+DerivedData/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+*.xcuserstate
+*.moved-aside
+.DS_Store
+
+# 脚本产生的临时文件
+tools/_*
+__pycache__/
+*.pyc
+
+# 打包产物
+dist/
+*.ipa
