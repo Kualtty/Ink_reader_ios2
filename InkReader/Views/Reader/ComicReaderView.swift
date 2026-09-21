@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Reader/ComicReaderView.swift
+//  功能：漫画阅读器 —— 图片页缓存、双指缩放、左右 / 右左 / 上下翻页，并挂涂鸦层。
+//  要点：ComicImageCache 控制内存；翻页方向取自 ReadingSettings。
+
 import SwiftUI
 import UIKit
 

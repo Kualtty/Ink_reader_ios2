@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Reader/PageTextView.swift
+//  功能：分页文本视图 —— 单页 UITextView，划词菜单提供高亮 / 笔记 / 查词 / 搜索 / 编辑原文。
+//  要点：划词范围要经 globalRange(range) 换算成全文偏移，漏传参数的写法会编译不过。
+
 import SwiftUI
 import UIKit
 
@@ -9,6 +13,8 @@ enum TextAction {
     case lookup
     /// 朗读选中的这一段
     case speak
+    /// 直接改这一段原文（仅 TXT / EPUB）
+    case revise
 }
 
 /// 支持划词与高亮的只读文本视图（单页）
@@ -118,11 +124,14 @@ struct PageTextView: UIViewRepresentable {
             // 太长的选段不适合查词，词典和网页都扛不住一整段
             if selected.trimmed.count <= 30 {
                 extras.append(UIAction(title: "查词", image: UIImage(systemName: "character.book.closed")) { _ in
-                    self.parent.onSelect(globalRange(), selected, .lookup)
+                    self.parent.onSelect(globalRange(range), selected, .lookup)
                 })
             }
             extras.append(UIAction(title: "朗读", image: UIImage(systemName: "speaker.wave.2")) { _ in
-                self.parent.onSelect(globalRange(), selected, .speak)
+                self.parent.onSelect(globalRange(range), selected, .speak)
+            })
+            extras.append(UIAction(title: "编辑原文", image: UIImage(systemName: "pencil.and.outline")) { _ in
+                self.parent.onSelect(globalRange(range), selected, .revise)
             })
             let menu = UIMenu(children: suggestedActions + [highlightAction, noteAction] + extras)
             return menu

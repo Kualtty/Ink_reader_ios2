@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Library/LibraryView.swift
+//  功能：书架主页 —— 网格卡片、搜索、排序、多选批量操作、导入入口。
+//  要点：长按 / 右键菜单含重命名、置顶、局域网共享、页面管理、移入收藏夹、导出笔记、导出原文件、删除。
+
 import SwiftUI
 import UIKit
 import UniformTypeIdentifiers
@@ -6,6 +10,8 @@ struct LibraryView: View {
     @EnvironmentObject private var library: LibraryStore
     @EnvironmentObject private var annotations: AnnotationStore
     @EnvironmentObject private var collections: CollectionStore
+    @EnvironmentObject private var revisions: RevisionStore
+    @EnvironmentObject private var pages: ComicPageStore
     @Environment(\.horizontalSizeClass) private var sizeClass
 
     @State private var showImporter = false
@@ -14,6 +20,14 @@ struct LibraryView: View {
     @State private var confirmDelete: Book?
     @State private var alertMessage: String?
     @State private var isImporting = false
+    @State private var renameTarget: Book?
+    @State private var renameText = ""
+    @State private var showShare = false
+    @State private var shareTargets: Set<UUID> = []
+    @State private var comicPagesTarget: Book?
+    @State private var activityItems: [Any] = []
+    @State private var showActivity = false
+    @State private var confirmClearData = false
 
     // iPad：筛选项常驻在左侧栏；批量选择也在这里
     @State private var sidebar: SidebarItem = .all
@@ -85,6 +99,19 @@ struct LibraryView: View {
                 .environmentObject(annotations)
                 .environmentObject(collections)
         }
+        .sheet(isPresented: $showShare) {
+            LanShareView(preselected: shareTargets)
+                .environmentObject(library)
+        }
+        .sheet(item: $comicPagesTarget) { book in
+            ComicPagesView(book: book)
+                .environmentObject(library)
+                .environmentObject(annotations)
+                .environmentObject(pages)
+        }
+        .sheet(isPresented: $showActivity) {
+            ActivityView(items: activityItems) { activityItems = [] }
+        }
         .fileImporter(
             isPresented: $showImporter,
             allowedContentTypes: Self.supportedTypes,
@@ -98,7 +125,13 @@ struct LibraryView: View {
             }
         }
         .fullScreenCover(item: $openedBook) { book in
-            ReaderContainerView(book: book, library: library, annotations: annotations)
+            ReaderContainerView(
+                book: book,
+                library: library,
+                annotations: annotations,
+                revisions: revisions,
+                pages: pages
+            )
         }
         .confirmationDialog(
             "确定删除这本书？",
@@ -125,6 +158,39 @@ struct LibraryView: View {
                 selectMode = false
             }
             Button("取消", role: .cancel) { }
+        }
+        // 重命名：书名是导入时猜的，猜错很正常
+        .alert("重命名", isPresented: Binding(
+            get: { renameTarget != nil },
+            set: { if !$0 { renameTarget = nil } }
+        ), presenting: renameTarget) { book in
+            TextField("书名", text: $renameText)
+            Button("好") {
+                library.rename(book.id, to: renameText)
+                renameTarget = nil
+            }
+            Button("取消", role: .cancel) { renameTarget = nil }
+        } message: {
+            Text("只改书架上的显示名，不动文件本身")
+        }
+        .confirmationDialog(
+            "清除全部数据？",
+            isPresented: $confirmClearData,
+            titleVisibility: .visible
+        ) {
+            Button("清除", role: .destructive) {
+                library.clearAllData(
+                    annotations: annotations,
+                    collections: collections,
+                    revisions: revisions
+                )
+                alertMessage = "已清除全部书籍与笔记"
+            }
+            Button("取消", role: .cancel) { }
+        } message: {
+            Text("书、封面、笔记、书签、手写涂鸦、收藏夹、修订记录全部删除。"
+                 + "App 本身还留在 iPad 上，等于恢复出厂的书架。想连 App 一起删，"
+                 + "到主屏幕长按图标移除即可。")
         }
         .alert("提示", isPresented: Binding(
             get: { alertMessage != nil },
@@ -172,6 +238,34 @@ struct LibraryView: View {
                                 } label: {
                                     Label("选择", systemImage: "checkmark.circle")
                                 }
+                                Button {
+                                    renameTarget = book
+                                    renameText = book.title
+                                } label: {
+                                    Label("重命名", systemImage: "pencil")
+                                }
+                                Button {
+                                    library.togglePin(book.id)
+                                } label: {
+                                    Label(book.pinnedAt == nil ? "置顶" : "取消置顶",
+                                          systemImage: book.pinnedAt == nil ? "pin" : "pin.slash")
+                                }
+                                Button {
+                                    shareTargets = [book.id]
+                                    showShare = true
+                                } label: {
+                                    Label("局域网共享", systemImage: "antenna.radiowaves.left.and.right")
+                                }
+                                if book.format == .comic {
+                                    Button {
+                                        comicPagesTarget = book
+                                    } label: {
+                                        Label("页面管理", systemImage: "photo.stack")
+                                    }
+                                }
+                                Menu("移动到收藏夹") {
+                                    collectionButtons(for: [book.id])
+                                }
                                 // 封面：缩略图 / 纯色 / 自定义图片，颜色和收藏夹共用一套 12 色
                                 Menu("封面") {
                                     Button {
@@ -201,6 +295,16 @@ struct LibraryView: View {
                                             }
                                         }
                                     }
+                                }
+                                Button {
+                                    exportNotes(book)
+                                } label: {
+                                    Label("导出笔记（Markdown）", systemImage: "doc.text")
+                                }
+                                Button {
+                                    exportOriginal(book)
+                                } label: {
+                                    Label("导出原文件", systemImage: "square.and.arrow.up")
                                 }
                                 Button(role: .destructive) {
                                     confirmDelete = book
@@ -278,6 +382,18 @@ struct LibraryView: View {
                 } label: {
                     Label("备份与恢复", systemImage: "externaldrive.badge.timemachine")
                 }
+                Button {
+                    shareTargets = []
+                    showShare = true
+                } label: {
+                    Label("局域网共享", systemImage: "antenna.radiowaves.left.and.right")
+                }
+                Divider()
+                Button(role: .destructive) {
+                    confirmClearData = true
+                } label: {
+                    Label("清除全部数据", systemImage: "trash.slash")
+                }
             } label: {
                 Image(systemName: "arrow.up.arrow.down.circle")
             }
@@ -320,23 +436,16 @@ struct LibraryView: View {
             }
             .disabled(selected.isEmpty)
 
+            Button {
+                shareTargets = selected
+                showShare = true
+            } label: {
+                Image(systemName: "antenna.radiowaves.left.and.right")
+            }
+            .disabled(selected.isEmpty)
+
             Menu {
-                if collections.collections.isEmpty {
-                    Text("还没有收藏夹")
-                } else {
-                    ForEach(collections.topLevel) { item in
-                        Button(item.name) { addSelected(to: item.id) }
-                        ForEach(collections.children(of: item.id)) { kid in
-                            Button("　\(kid.name)") { addSelected(to: kid.id) }
-                        }
-                    }
-                    Divider()
-                    Button("新建收藏夹并加入") {
-                        let item = collections.create(name: "新建收藏夹")
-                        addSelected(to: item.id)
-                        showCollections = true
-                    }
-                }
+                collectionButtons(for: selected)
             } label: {
                 Image(systemName: "folder.badge.plus")
             }
@@ -367,11 +476,61 @@ struct LibraryView: View {
 
     // MARK: - 操作
 
-    private func addSelected(to collectionId: UUID) {
-        let ids = Set(allBooks.filter { selected.contains($0.id) }.map { $0.id })
+    private func add(_ ids: Set<UUID>, to collectionId: UUID) {
         guard !ids.isEmpty else { return }
         library.add(ids, toCollection: collectionId)
         alertMessage = "已把 \(ids.count) 本加入「\(collections.displayName(of: collectionId))」"
+    }
+
+    private func addSelected(to collectionId: UUID) {
+        add(Set(allBooks.filter { selected.contains($0.id) }.map { $0.id }), to: collectionId)
+        selected.removeAll()
+    }
+
+    /// 书卡片菜单和批量条共用的「加入收藏夹」列表
+    @ViewBuilder
+    private func collectionButtons(for ids: Set<UUID>) -> some View {
+        if collections.collections.isEmpty {
+            Text("还没有收藏夹")
+        } else {
+            ForEach(collections.topLevel) { item in
+                Button(item.name) { add(ids, to: item.id) }
+                ForEach(collections.children(of: item.id)) { kid in
+                    Button("　\(kid.name)") { add(ids, to: kid.id) }
+                }
+            }
+            Divider()
+            Button("新建收藏夹并加入") {
+                let item = collections.create(name: "新建收藏夹")
+                add(ids, to: item.id)
+                showCollections = true
+            }
+        }
+    }
+
+    private func exportOriginal(_ book: Book) {
+        guard let url = ExportService.exportableFileURL(for: book) else {
+            alertMessage = "原文件不在了，可能已经被系统清理掉"
+            return
+        }
+        activityItems = [url]
+        showActivity = true
+    }
+
+    private func exportNotes(_ book: Book) {
+        var text = ""
+        if book.format.isReflowable,
+           let data = try? Data(contentsOf: book.fileURL) {
+            text = TextEncodingDetector.decode(data) ?? ""
+        }
+        guard let url = ExportService.notesMarkdownFile(
+            book: book, annotations: annotations, fullText: text
+        ) else {
+            alertMessage = "导出笔记失败"
+            return
+        }
+        activityItems = [url]
+        showActivity = true
     }
 
     private func toggleSelect(_ id: UUID) {
@@ -384,6 +543,7 @@ struct LibraryView: View {
             annotations.bookmarks.removeAll { $0.bookId == book.id }
             annotations.highlights.removeAll { $0.bookId == book.id }
             annotations.save()
+            revisions.clear(bookId: book.id)
             library.delete(book)
         }
     }

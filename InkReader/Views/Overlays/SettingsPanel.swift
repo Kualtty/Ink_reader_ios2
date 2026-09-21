@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Overlays/SettingsPanel.swift
+//  功能：阅读设置面板 —— 主题色板、字号 / 行距滑杆、对齐、翻页方向、自动翻页速度、漫画模式与方向。
+//  要点：改动即时生效并落盘。
+
 import AVFoundation
 import SwiftUI
 import UIKit

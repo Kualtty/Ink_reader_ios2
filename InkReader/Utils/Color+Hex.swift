@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Utils/Color+Hex.swift
+//  功能：颜色扩展 —— hex 字符串与 Color / UIColor 互转，另含 Data 的小扩展。
+//  要点：封面配色、收藏夹颜色、主题色板都走这里。
+
 import SwiftUI
 import UIKit
 

@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Library/LibrarySidebarView.swift
+//  功能：书架侧栏 —— 全部 / 各收藏夹 / 按格式筛选，并承载批量选择入口。
+//  要点：LibraryFilter 与 SidebarItem 只在这里定义。
+
 import SwiftUI
 
 /// 书架侧栏的筛选项。iPad 上常驻在左边一栏（NavigationSplitView 的 sidebar），

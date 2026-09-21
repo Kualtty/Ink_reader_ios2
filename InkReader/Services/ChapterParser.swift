@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Services/ChapterParser.swift
+//  功能：目录解析 —— 用正则从 TXT 正文里抽出章节标题与字符位置。
+//  要点：命中规则见文件内正则；解析结果供 ChapterListView 跳转使用。
+
 import Foundation
 
 /// 章节目录识别（TXT / EPUB 转文本后通用）

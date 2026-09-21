@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Models/ReadingSettings.swift
+//  功能：阅读设置 —— 主题、字号、行距、对齐、翻页方向、漫画阅读模式与方向、自动翻页速度。
+//  要点：全局一份，改动即落盘；文字阅读器与漫画阅读器共用同一份设置。
+
 import SwiftUI
 import UIKit
 

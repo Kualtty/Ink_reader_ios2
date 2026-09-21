@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Library/BackupView.swift
+//  功能：备份界面 —— 导出整库 / 导出所选、导入备份（合并或覆盖）、本机备份文件列表。
+//  要点：选择书籍复用 BookPickerSheet 多选。
+
 import SwiftUI
 import UniformTypeIdentifiers
 

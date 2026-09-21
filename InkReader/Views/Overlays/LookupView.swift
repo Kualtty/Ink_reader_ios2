@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Overlays/LookupView.swift
+//  功能：查词与网页查询 —— 系统词典（UIReferenceLibraryViewController）、Safari 小窗、搜索引擎跳转。
+//  要点：SearchEngines 里可加更多引擎。
+
 import SafariServices
 import SwiftUI
 import UIKit

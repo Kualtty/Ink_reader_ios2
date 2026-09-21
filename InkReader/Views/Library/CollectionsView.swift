@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Library/CollectionsView.swift
+//  功能：收藏夹界面 —— 列表管理、重命名、改颜色、删除、批量移入书籍。
+//  要点：颜色取自 ColorPickerSheet。
+
 import SwiftUI
 
 /// 收藏夹管理：新建 / 重命名 / 12 色配色 / 排序 / 嵌套 / 清空 / 删除

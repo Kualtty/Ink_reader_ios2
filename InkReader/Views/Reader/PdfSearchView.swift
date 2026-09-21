@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Reader/PdfSearchView.swift
+//  功能：PDF 搜索 —— 后台异步全文检索，命中列表可跳转并短暂高亮。
+//  要点：PdfSearchViewModel 承担异步与去重。
+
 import PDFKit
 import SwiftUI
 

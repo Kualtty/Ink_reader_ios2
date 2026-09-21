@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Models/Collection.swift
+//  功能：收藏夹模型 —— BookCollection（名称 / 颜色 / 成员 bookId 集合）。
+//  要点：只存 id 不存书籍对象，避免和书架数据不同步。
+
 import Foundation
 import SwiftUI
 

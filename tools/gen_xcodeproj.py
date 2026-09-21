@@ -35,11 +35,16 @@ GROUPS = [
         "ChapterParser.swift",
         "CollectionStore.swift",
         "ComicExtractor.swift",
+        "ComicPageStore.swift",
         "EPUBParser.swift",
+        "ExportService.swift",
+        "LanShare.swift",
         "LibraryStore.swift",
+        "ShareCrypto.swift",
         "SpeechService.swift",
         "Storage.swift",
         "TextEncodingDetector.swift",
+        "TextRevision.swift",
         "TxtPaginator.swift",
     ]),
     ("Utils", [
@@ -53,6 +58,8 @@ NESTED_GROUPS = [
         ("Library", [
             "BackupView.swift",
             "CollectionsView.swift",
+            "ComicPagesView.swift",
+            "LanShareView.swift",
             "LibrarySidebarView.swift",
             "LibraryView.swift",
         ]),
@@ -72,6 +79,7 @@ NESTED_GROUPS = [
             "LookupView.swift",
             "NoteComposer.swift",
             "SettingsPanel.swift",
+            "TextRevisionView.swift",
         ]),
     ]),
 ]
@@ -467,3 +475,84 @@ with open(os.path.join(PROJ_DIR, "project.pbxproj"), "w", encoding="utf-8", newl
 
 print("generated:", os.path.join(PROJ_DIR, "project.pbxproj"))
 print("files:", len(file_refs), "build files:", len(build_files))
+
+# ---------------------------------------------------------------- shared scheme
+# 关键：没有 scheme 时 xcodebuild 无法解析 SPM 包依赖，CI 上会直接失败（exit 74）。
+# 放在 xcshareddata 下才会进 git（xcuserdata 被 .gitignore 忽略）。
+SCHEME_DIR = os.path.join(PROJ_DIR, "xcshareddata", "xcschemes")
+os.makedirs(SCHEME_DIR, exist_ok=True)
+
+BUILDABLE = """            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "__TARGET__"
+               BuildableName = "InkReader.app"
+               BlueprintName = "InkReader"
+               ReferencedContainer = "container:InkReader.xcodeproj">
+            </BuildableReference>""".replace("__TARGET__", TARGET)
+
+SCHEME = """<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "1500"
+   version = "1.3">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+__REF__
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <Testables>
+      </Testables>
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
+      allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+__REF__
+      </BuildableProductRunnable>
+   </LaunchAction>
+   <ProfileAction
+      buildConfiguration = "Release"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+__REF__
+      </BuildableProductRunnable>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Debug">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Release"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>
+""".replace("__REF__", BUILDABLE)
+
+with open(os.path.join(SCHEME_DIR, "InkReader.xcscheme"), "w", encoding="utf-8", newline="\n") as f:
+    f.write(SCHEME)
+
+print("generated:", os.path.join(SCHEME_DIR, "InkReader.xcscheme"))

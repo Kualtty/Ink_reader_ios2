@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Utils/VolumeKeyObserver.swift
+//  功能：音量键翻页 —— 用隐藏的 MPVolumeView + KVO 捕获系统音量变化，转成翻页事件。
+//  要点：只是辅助手段，主交互仍是点击与滑动。
+
 import AVFoundation
 import MediaPlayer
 import UIKit

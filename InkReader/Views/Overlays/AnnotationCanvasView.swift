@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Overlays/AnnotationCanvasView.swift
+//  功能：手写涂鸦层 —— PencilKit 画布覆盖在页面上，按页或屏锚点读写笔迹。
+//  要点：show（有笔迹就显示）与 active（仅编辑时接收点击）是两个状态，别合并，否则完成后笔迹会消失。
+
 import PencilKit
 import SwiftUI
 import UIKit

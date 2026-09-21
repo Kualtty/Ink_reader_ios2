@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Overlays/NoteComposer.swift
+//  功能：笔记编辑 —— 划词后写笔记或加书签，并列出本书全部笔记与书签，可跳转与删除。
+//  要点：与 AnnotationStore 直接交互。
+
 import SwiftUI
 
 // MARK: - 笔记编辑

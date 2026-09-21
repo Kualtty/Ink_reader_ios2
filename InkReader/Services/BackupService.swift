@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Services/BackupService.swift
+//  功能：备份与恢复 —— 整库备份、按选择备份（exportIds）、导入时合并或覆盖。
+//  要点：部分备份（inkreader-select-*）导入时强制降级为合并，否则会把没备份的书删掉。
+
 import Foundation
 import ZIPFoundation
 

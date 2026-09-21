@@ -28,6 +28,12 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>墨阅要用局域网把书共享给同一 Wi-Fi 下的另一台 iPad，或者从另一台 iPad 取书。</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_inkreader._tcp</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UIRequiredDeviceCapabilities</key>

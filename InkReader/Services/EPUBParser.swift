@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Services/EPUBParser.swift
+//  功能：EPUB 解析 —— container.xml → OPF → spine，拼出纯文本与章节列表。
+//  要点：导入后按纯文本处理，所以 EPUB 也能用「编辑原文」修订。
+
 import Foundation
 import ZIPFoundation
 

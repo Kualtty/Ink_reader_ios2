@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Services/AnnotationStore.swift
+//  功能：标注仓库 —— 书签 / 笔记 / 高亮 / 涂鸦的增删改查与持久化。
+//  要点：remapPages(bookId:mapping:) 在漫画排序、删页、拆分、合并后搬迁标注；空映射必须直接 return，否则会清空整本标注。
+
 import Foundation
 import PencilKit
 import SwiftUI
@@ -153,6 +157,66 @@ final class AnnotationStore: ObservableObject {
             at: Storage.drawingURL(bookId: bookId, key: anchor)
         )
         objectWillChange.send()
+    }
+
+    /// 漫画合并 / 拆分 / 删页 / 排序之后按「旧页号 → 新页号」搬迁标注
+    ///
+    /// 映射里没有的页号表示那一页没了，对应的标注就跟着删；
+    /// 涂鸦是按 `c<页号>` 存的文件，一起改名搬走，笔记书签一个都不丢。
+    func remapPages(bookId: UUID, mapping: [Int: Int], to newBookId: UUID? = nil) {
+        // 空映射多半是调用方没算出来，真按它执行会把整本书的标注清空
+        guard !mapping.isEmpty else { return }
+        let target = newBookId ?? bookId
+
+        var nextBookmarks: [Bookmark] = []
+        for item in bookmarks where item.bookId == bookId {
+            guard let page = mapping[item.page] else { continue }
+            var copy = item
+            copy.page = page
+            copy.bookId = target
+            copy.locator = String(page)
+            nextBookmarks.append(copy)
+        }
+        bookmarks.removeAll { $0.bookId == bookId }
+        bookmarks.append(contentsOf: nextBookmarks)
+
+        var nextNotes: [Note] = []
+        for item in notes where item.bookId == bookId {
+            guard let page = mapping[item.page] else { continue }
+            var copy = item
+            copy.page = page
+            copy.bookId = target
+            copy.locator = String(page)
+            nextNotes.append(copy)
+        }
+        notes.removeAll { $0.bookId == bookId }
+        notes.append(contentsOf: nextNotes)
+
+        highlights = highlights.map { item in
+            guard item.bookId == bookId else { return item }
+            var copy = item
+            copy.bookId = target
+            return copy
+        }
+
+        for (oldPage, newPage) in mapping {
+            moveDrawing(fromBookId: bookId, page: oldPage, toBookId: target, page: newPage)
+        }
+        save()
+    }
+
+    /// 把某一页的涂鸦搬到另一个位置
+    func moveDrawing(fromBookId: UUID, page oldPage: Int, toBookId: UUID, page newPage: Int) {
+        let fromKey = "c\(oldPage)"
+        let toKey = "c\(newPage)"
+        if fromBookId == toBookId, oldPage == newPage { return }
+        let source = Storage.drawingURL(bookId: fromBookId, key: fromKey)
+        guard FileManager.default.fileExists(atPath: source.path) else { return }
+        let destination = Storage.drawingURL(bookId: toBookId, key: toKey)
+        try? FileManager.default.removeItem(at: destination)
+        try? FileManager.default.moveItem(at: source, to: destination)
+        drawingCache.removeValue(forKey: cacheKey(fromBookId, fromKey))
+        drawingCache.removeValue(forKey: cacheKey(toBookId, toKey))
     }
 
     /// 某本书所有有涂鸦的位置锚点

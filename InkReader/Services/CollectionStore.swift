@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Services/CollectionStore.swift
+//  功能：收藏夹仓库 —— 新建、重命名、改颜色、删除、批量移入移出书籍。
+//  要点：增删成员只动 id 集合，不动书籍本体。
+
 import Foundation
 import SwiftUI
 

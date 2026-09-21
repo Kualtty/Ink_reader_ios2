@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Services/TextEncodingDetector.swift
+//  功能：编码探测 —— 识别 UTF-8 / UTF-16 / GBK / GB18030 / Big5 等，解决中文 TXT 乱码。
+//  要点：探测失败时回退到 GB18030，覆盖绝大多数简体中文文件。
+
 import Foundation
 
 /// TXT 编码探测：兼容 UTF-8 / GBK / GB18030 / Big5 / UTF-16 / Latin1

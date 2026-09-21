@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Models/Bookmark.swift
+//  功能：标注模型 —— Bookmark（书签）、Note（笔记，带 kind）、HighlightRange（高亮区间）。
+//  要点：偏移量一律相对全文；原文被修订后由 RevisionStore 统一平移，不要在这里自己算。
+
 import Foundation
 
 // MARK: - 书签

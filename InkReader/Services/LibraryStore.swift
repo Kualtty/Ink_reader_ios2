@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Services/LibraryStore.swift
+//  功能：书架仓库 —— 书籍增删改、排序（置顶优先）、重命名、置顶、清除全部数据。
+//  要点：sortedBooks 先把 pinnedAt 非空的排在前面，再套用排序选项。
+
 import Foundation
 import SwiftUI
 
@@ -98,6 +102,60 @@ final class LibraryStore: ObservableObject {
         books.first { $0.id == id }
     }
 
+    // MARK: - 置顶 / 重命名
+
+    func togglePin(_ id: UUID) {
+        guard let idx = books.firstIndex(where: { $0.id == id }) else { return }
+        books[idx].pinnedAt = books[idx].pinnedAt == nil ? Date() : nil
+        save()
+    }
+
+    func rename(_ id: UUID, to title: String) {
+        let trimmed = title.trimmed
+        guard !trimmed.isEmpty else { return }
+        guard let idx = books.firstIndex(where: { $0.id == id }) else { return }
+        books[idx].title = trimmed
+        save()
+    }
+
+    // MARK: - 清空数据 / 卸载
+    //
+    // iOS 里「卸载 App」系统是自带会把数据一起带走的，所以在 App 内只提供
+    // 「清除数据」这一档：把书、笔记、涂鸦、收藏夹、修订记录全部抹掉，
+    // App 本身还留在 iPad 上，等于恢复出厂的书架。
+
+    func clearAllData(annotations: AnnotationStore,
+                      collections: CollectionStore,
+                      revisions: RevisionStore) {
+        for book in books {
+            try? FileManager.default.removeItem(at: book.fileURL)
+            if let cover = book.coverURL { try? FileManager.default.removeItem(at: cover) }
+            try? FileManager.default.removeItem(
+                at: Storage.comicCacheDirectory.appendingPathComponent(book.id.uuidString)
+            )
+        }
+        try? FileManager.default.removeItem(at: Storage.drawingsDirectory)
+
+        let targets: [URL] = [
+            Storage.libraryFile,
+            Storage.annotationsFile,
+            Storage.collectionsFile,
+            Storage.documents.appendingPathComponent("revisions.json"),
+            Storage.documents.appendingPathComponent("comicpages.json")
+        ]
+        for url in targets { try? FileManager.default.removeItem(at: url) }
+
+        books = []
+        annotations.bookmarks = []
+        annotations.notes = []
+        annotations.highlights = []
+        annotations.save()
+        collections.collections = []
+        collections.save()
+        revisions.reset()
+        save()
+    }
+
     // MARK: - 收藏夹归属
 
     /// 把一批书加进收藏夹（已经在里面的不会重复加）
@@ -160,15 +218,24 @@ final class LibraryStore: ObservableObject {
                 $0.title.lowercased().contains(kw) || $0.author.lowercased().contains(kw)
             }
         }
-        switch sortOption {
-        case .lastRead:
-            result.sort { ($0.lastReadAt ?? .distantPast) > ($1.lastReadAt ?? .distantPast) }
-        case .addedAt:
-            result.sort { $0.addedAt > $1.addedAt }
-        case .title:
-            result.sort { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
-        case .progress:
-            result.sort { $0.progress > $1.progress }
+        // 置顶的书永远在最前，其余按选的排序规则走
+        result.sort { lhs, rhs in
+            if (lhs.pinnedAt != nil) != (rhs.pinnedAt != nil) {
+                return lhs.pinnedAt != nil
+            }
+            if lhs.pinnedAt != nil, rhs.pinnedAt != nil {
+                return (lhs.pinnedAt ?? .distantPast) > (rhs.pinnedAt ?? .distantPast)
+            }
+            switch sortOption {
+            case .lastRead:
+                return (lhs.lastReadAt ?? .distantPast) > (rhs.lastReadAt ?? .distantPast)
+            case .addedAt:
+                return lhs.addedAt > rhs.addedAt
+            case .title:
+                return lhs.title.localizedStandardCompare(rhs.title) == .orderedAscending
+            case .progress:
+                return lhs.progress > rhs.progress
+            }
         }
         return result
     }

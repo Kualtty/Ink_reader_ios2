@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Services/ComicExtractor.swift
+//  功能：漫画 / 压缩包解压 —— 把 cbz、zip、散图解压成有序的页文件并返回路径。
+//  要点：解压落在 Caches，可能被系统清理，所以页序不能存绝对路径。
+
 import Foundation
 import ZIPFoundation
 

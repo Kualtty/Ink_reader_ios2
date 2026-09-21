@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Models/Book.swift
+//  功能：书籍模型 —— Book（id / 标题 / 格式 / 封面 / 进度 / 置顶时间）+ BookFormat（封面模式）+ Chapter。
+//  要点：容错解码必须写在 extension 里；写进 struct 体内会让成员构造器消失，BookImporter 会编译不过。
+
 import Foundation
 
 // MARK: - 书籍格式
@@ -106,6 +110,8 @@ struct Book: Identifiable, Codable, Equatable {
     var coverModeRaw: String?
     /// 自定义封面时，纯色的十六进制色值（#RRGGBB）
     var coverColorHex: String?
+    /// 置顶时间，nil = 没置顶
+    var pinnedAt: Date?
 
     var fileURL: URL {
         Storage.booksDirectory.appendingPathComponent(fileName)
@@ -145,7 +151,7 @@ extension Book {
     private enum CodingKeys: String, CodingKey {
         case id, title, author, format, fileName, coverFileName, addedAt, lastReadAt
         case locator, progress, totalPages, fileSize, isFavorite, directionRaw
-        case collectionIds, coverModeRaw, coverColorHex
+        case collectionIds, coverModeRaw, coverColorHex, pinnedAt
     }
 
     init(from decoder: Decoder) throws {
@@ -167,6 +173,7 @@ extension Book {
         collectionIds = try c.decodeIfPresent([UUID].self, forKey: .collectionIds) ?? []
         coverModeRaw = try c.decodeIfPresent(String.self, forKey: .coverModeRaw)
         coverColorHex = try c.decodeIfPresent(String.self, forKey: .coverColorHex)
+        pinnedAt = try c.decodeIfPresent(Date.self, forKey: .pinnedAt)
     }
 
     /// 老版本把 locator 存成过数字，这里两种都接

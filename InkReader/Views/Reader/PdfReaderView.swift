@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Reader/PdfReaderView.swift
+//  功能：PDF 阅读器 —— PDFKit 视图 + 页码跳转 + 涂鸦层 + 搜索入口。
+//  要点：PDF 是固定版面，不做原文修订。
+
 import PDFKit
 import SwiftUI
 import UIKit

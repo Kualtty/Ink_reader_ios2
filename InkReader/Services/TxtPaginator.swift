@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Services/TxtPaginator.swift
+//  功能：TXT 分页 —— TextKit 多 NSTextContainer 后台分页，带 NSLock 保护结果。
+//  要点：页码由字号与页面尺寸决定，改设置会触发重新分页。
+
 import UIKit
 
 /// TXT / EPUB 纯文本分页引擎（TextKit 多容器方案）

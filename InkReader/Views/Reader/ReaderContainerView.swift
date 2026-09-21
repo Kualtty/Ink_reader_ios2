@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Reader/ReaderContainerView.swift
+//  功能：阅读器容器 —— 顶栏 / 底栏、点击与手势、sheet 路由（目录 / 笔记 / 设置 / 修订 / 查词）、自动翻页计时。
+//  要点：ReaderSheet 枚举新增一项时，这里和 ReaderViewModel 都要同步。
+
 import SwiftUI
 import UIKit
 
@@ -12,6 +16,8 @@ struct ReaderContainerView: View {
     let book: Book
     @ObservedObject var library: LibraryStore
     @ObservedObject var annotations: AnnotationStore
+    @ObservedObject var revisions: RevisionStore
+    @ObservedObject var pages: ComicPageStore
 
     @StateObject private var vm: ReaderViewModel
     @Environment(\.dismiss) private var dismiss
@@ -22,13 +28,26 @@ struct ReaderContainerView: View {
     @State private var showJumpPage = false
     @State private var jumpPageText = ""
     @State private var lookupTerm: LookupTerm?
+    @State private var revisionRequest: RevisionRequest?
 
-    init(book: Book, library: LibraryStore, annotations: AnnotationStore) {
+    init(book: Book,
+         library: LibraryStore,
+         annotations: AnnotationStore,
+         revisions: RevisionStore,
+         pages: ComicPageStore) {
         self.book = book
         self._library = ObservedObject(wrappedValue: library)
         self._annotations = ObservedObject(wrappedValue: annotations)
+        self._revisions = ObservedObject(wrappedValue: revisions)
+        self._pages = ObservedObject(wrappedValue: pages)
         self._vm = StateObject(
-            wrappedValue: ReaderViewModel(book: book, library: library, annotations: annotations)
+            wrappedValue: ReaderViewModel(
+                book: book,
+                library: library,
+                annotations: annotations,
+                revisions: revisions,
+                pages: pages
+            )
         )
     }
 
@@ -141,7 +160,11 @@ struct ReaderContainerView: View {
             case .chapters: ChapterListView(vm: vm)
             case .search: ReaderSearchView(vm: vm)
             case .jump: ChapterListView(vm: vm)
+            case .revisions: RevisionHistoryView(vm: vm)
             }
+        }
+        .sheet(item: $revisionRequest) { request in
+            TextRevisionEditor(vm: vm, request: request)
         }
         .sheet(item: $lookupTerm) { term in
             LookupSheet(term: term.text)
@@ -245,6 +268,12 @@ struct ReaderContainerView: View {
             lookupTerm = LookupTerm(text: text)
         case .speak:
             vm.speakSelection(text)
+        case .revise:
+            guard vm.canRevise else {
+                vm.toast = "PDF / 漫画是固定版面，改不了原文"
+                return
+            }
+            revisionRequest = RevisionRequest(range: range, text: text)
         }
     }
 
@@ -280,6 +309,10 @@ struct ReaderContainerView: View {
 
             if vm.isReflowable {
                 Button { vm.sheet = .chapters } label: { Image(systemName: "list.bullet") }
+            }
+            // 原文修订：只有 TXT / EPUB 能改，PDF 与漫画是固定版面
+            if vm.canRevise {
+                Button { vm.sheet = .revisions } label: { Image(systemName: "pencil.and.outline") }
             }
             // PDF 也能全文搜，漫画没有文字就不给这个按钮
             if vm.isReflowable || vm.book.format == .pdf {

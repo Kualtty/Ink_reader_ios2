@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Overlays/ChapterListView.swift
+//  功能：目录与搜索 —— 章节目录跳转，全文搜索（分页与滚动各一套实现）。
+//  要点：搜索命中后把字符偏移换算成页码再跳转。
+
 import SwiftUI
 
 // MARK: - 目录

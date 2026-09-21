@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Reader/TxtScrollReader.swift
+//  功能：TXT 滚动阅读器 —— 连续滚动的 UITextView，用 layoutManager 反算字符偏移来定位。
+//  要点：滚动模式下涂鸦按屏序号锚定。
+
 import SwiftUI
 import UIKit
 
@@ -182,6 +186,9 @@ struct TxtScrollReader: UIViewRepresentable {
             }
             extras.append(UIAction(title: "朗读", image: UIImage(systemName: "speaker.wave.2")) { _ in
                 self.parent.onSelect(range, selected, .speak)
+            })
+            extras.append(UIAction(title: "编辑原文", image: UIImage(systemName: "pencil.and.outline")) { _ in
+                self.parent.onSelect(range, selected, .revise)
             })
             return UIMenu(children: suggestedActions + [highlight, note] + extras)
         }

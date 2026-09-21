@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Services/SpeechService.swift
+//  功能：播读 —— AVSpeechSynthesizer 分块朗读，支持开始 / 暂停 / 继续 / 跳句并高亮当前句。
+//  要点：长文按 SpeechChunk 切块，避免一次性喂给合成器。
+
 import AVFoundation
 
 // MARK: - 朗读片段

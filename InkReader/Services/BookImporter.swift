@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Services/BookImporter.swift
+//  功能：导入 —— 按扩展名把文件分发到 txt / pdf / epub / cbz / 图片，写入 Books 目录、抽封面、登记书架。
+//  要点：依赖 Book(id:title:format:...) 成员构造器，改 Book 的解码方式时要回来确认这里没受影响。
+
 import Foundation
 import PDFKit
 import UIKit

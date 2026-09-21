@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Services/Storage.swift
+//  功能：存储路径 —— 统一给出 Documents/Books、Caches、涂鸦目录等路径并负责创建。
+//  要点：新加目录在这里登记，别在各处硬拼路径。
+
 import Foundation
 
 enum Storage {

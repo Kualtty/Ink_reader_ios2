@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Reader/TxtPagedReader.swift
+//  功能：TXT 分页阅读器 —— 以横向翻页方式逐页呈现 TxtPaginator 的结果。
+//  要点：与 TxtScrollReader 二选一，由阅读设置决定。
+
 import SwiftUI
 import UIKit
 

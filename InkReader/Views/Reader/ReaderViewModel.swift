@@ -1,3 +1,7 @@
+//  墨阅 InkReader · InkReader/Views/Reader/ReaderViewModel.swift
+//  功能：阅读器视图模型 —— 装载书籍、分页、翻页、标注、播读、修订、涂鸦的业务中枢。
+//  要点：构造参数含 library / annotations / revisions / pages 四个 Store，新增 Store 要同步改这里与容器。
+
 import Combine
 import Foundation
 import PDFKit
@@ -10,6 +14,8 @@ enum ReaderSheet: Identifiable {
     case chapters
     case search
     case jump
+    /// 原文修订记录 / 失效标注
+    case revisions
 
     var id: String {
         switch self {
@@ -18,6 +24,7 @@ enum ReaderSheet: Identifiable {
         case .chapters: return "chapters"
         case .search: return "search"
         case .jump: return "jump"
+        case .revisions: return "revisions"
         }
     }
 }
@@ -27,6 +34,10 @@ final class ReaderViewModel: ObservableObject {
     // MARK: 依赖
     private let library: LibraryStore
     let annotations: AnnotationStore
+    /// 原文修订记录（改原文后平移标注、撤销、失效标注找回）
+    let revisions: RevisionStore
+    /// 漫画页序（合并 / 拆分 / 手动排序后就靠它）
+    let pages: ComicPageStore
 
     // MARK: 书籍
     private(set) var book: Book
@@ -79,18 +90,29 @@ final class ReaderViewModel: ObservableObject {
     private var lastLayoutSignature: String = ""
     /// SwiftUI 不会观察嵌套的 ObservableObject，这里把播读引擎的变化转发出来，
     /// 否则「暂停 / 继续」按钮的图标不会跟着变
+    /// 播读引擎的变化要转发（SwiftUI 观察不到嵌套的 ObservableObject）
     private var speechBridge: AnyCancellable?
+    private var revisionBridge: AnyCancellable?
 
-    init(book: Book, library: LibraryStore, annotations: AnnotationStore) {
+    init(book: Book,
+         library: LibraryStore,
+         annotations: AnnotationStore,
+         revisions: RevisionStore,
+         pages: ComicPageStore) {
         self.book = book
         self.library = library
         self.annotations = annotations
+        self.revisions = revisions
+        self.pages = pages
         self.settings = library.settings
         self.totalPages = max(1, book.totalPages)
         if let raw = Int(book.locator) {
             self.currentPage = min(max(0, raw), max(0, totalPages - 1))
         }
         speechBridge = speech.objectWillChange.sink { [weak self] _ in
+            self?.objectWillChange.send()
+        }
+        revisionBridge = revisions.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
         }
     }
@@ -196,8 +218,9 @@ final class ReaderViewModel: ObservableObject {
     private func loadComic() async {
         statusText = "解压漫画…"
         let bookCopy = book
+        let store = pages
         let images = await Task.detached(priority: .userInitiated) { () -> [URL] in
-            (try? ComicExtractor.extractImages(for: bookCopy)) ?? []
+            store.pages(for: bookCopy)
         }.value
         comicImages = images
         totalPages = max(1, images.count)
@@ -476,6 +499,77 @@ final class ReaderViewModel: ObservableObject {
 
     var isCurrentPageBookmarked: Bool {
         annotations.isBookmarked(bookId: book.id, locator: currentLocator)
+    }
+
+    // MARK: - 原文修订
+
+    /// PDF 与漫画是固定版面，改不了原文
+    var canRevise: Bool { isReflowable }
+
+    func applyRevision(range: NSRange, replacement: String) {
+        guard canRevise else { toast = "PDF / 漫画是固定版面，改不了原文"; return }
+        let ns = plainText as NSString
+        let loc = min(max(0, range.location), ns.length)
+        let len = min(max(0, range.length), ns.length - loc)
+        let oldText = ns.substring(with: NSRange(location: loc, length: len))
+        guard replacement != oldText else { toast = "原文没有改动"; return }
+
+        let record = TextRevision(
+            bookId: book.id,
+            location: loc,
+            oldLength: len,
+            oldText: oldText,
+            newText: replacement
+        )
+        let delta = (replacement as NSString).length - len
+        let next = revisions.apply(record, to: plainText, annotations: annotations)
+
+        // 当前读到哪也要跟着平移，不然改完会莫名跳到别处
+        var offset = isPaged && currentPage < pageRanges.count
+            ? pageRanges[currentPage].location
+            : topCharacterOffset
+        if offset >= loc + len {
+            offset += delta
+        } else if offset > loc {
+            offset = loc
+        }
+        book.locator = String(max(0, offset))
+        topCharacterOffset = max(0, offset)
+        commitRevisedText(next)
+        toast = delta == 0 ? "已修订原文" : "已修订原文（长度 \(delta > 0 ? "+" : "")\(delta)）"
+    }
+
+    func undoLastRevision() {
+        guard canRevise else { return }
+        guard let next = revisions.undoLast(bookId: book.id, text: plainText, annotations: annotations) else {
+            toast = "没有可撤销的修订"
+            return
+        }
+        commitRevisedText(next)
+        toast = "已撤销上一次修订"
+    }
+
+    func relocate(_ orphan: OrphanAnnotation) {
+        if revisions.relocate(orphan, in: plainText, annotations: annotations) {
+            toast = "已重新定位"
+        } else {
+            toast = "在新原文里没找到这段文字"
+        }
+    }
+
+    func dropOrphan(_ orphan: OrphanAnnotation) {
+        revisions.dropOrphan(orphan)
+    }
+
+    /// 把改后的全文写回文件、重算章节、重排
+    private func commitRevisedText(_ text: String) {
+        plainText = text
+        chapters = ChapterParser.parse(text: text)
+        try? text.write(to: book.fileURL, atomically: true, encoding: .utf8)
+        book.fileSize = Storage.fileSize(at: book.fileURL)
+        library.update(book)
+        relayout(force: true)
+        saveNow()
     }
 
     // MARK: - 保存进度
