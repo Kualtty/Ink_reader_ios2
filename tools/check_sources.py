@@ -90,6 +90,42 @@ if bad:
 else:
     print("  ✓ 括号全部配平")
 
-print("RESULT:", "OK" if not missing and not orphan and not bad else "FAILED")
+# ---- pbxproj 语法体检 ----
+# 踩过的坑：SUPPORTED_PLATFORMS = iphoneos iphonesimulator（多个值没加引号）
+# 会让 Xcode 直接报 "The project is damaged and cannot be opened"，CI 上表现为 exit 74。
+# 本机没有 Xcode，只能靠这一关提前挡住。
+PBX = os.path.join(ROOT, "InkReader.xcodeproj", "project.pbxproj")
+pbx_bad = []
+if os.path.exists(PBX):
+    assign = re.compile(r"^\s*[A-Za-z_][A-Za-z0-9_]*\s*=\s*(.+);\s*$")
+    for i, ln in enumerate(open(PBX, encoding="utf-8").read().splitlines(), 1):
+        raw = re.sub(r"/\*.*?\*/", "", ln).strip()
+        if "=" not in raw:
+            continue
+        if raw.endswith(","):          # 数组里的元素行，本来就没有分号
+            continue
+        if not raw.endswith((";", "(", ")", "{", "}", "};")):
+            pbx_bad.append("L%d 缺少分号：%s" % (i, raw))
+            continue
+        m = assign.match(raw)
+        if m:
+            v = m.group(1).strip()
+            # 以 ( 开头是数组、以 { 开头是单行字典，都是合法写法
+            if (not v.startswith(("(", "{"))
+                    and not (v.startswith('"') and v.endswith('"'))
+                    and " " in v):
+                pbx_bad.append("L%d 值含空格但没加引号：%s" % (i, raw))
+else:
+    pbx_bad.append("找不到 project.pbxproj")
+
+if pbx_bad:
+    print("  ✗ pbxproj 有语法风险：")
+    for b in pbx_bad[:20]:
+        print("     -", b)
+else:
+    print("  ✓ pbxproj 语法体检通过")
+
+ok = not missing and not orphan and not bad and not pbx_bad
+print("RESULT:", "OK" if ok else "FAILED")
 _LOG.flush()
 _LOG.close()

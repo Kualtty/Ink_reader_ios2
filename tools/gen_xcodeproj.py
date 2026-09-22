@@ -391,7 +391,8 @@ TARGET_COMMON = [
     ("MARKETING_VERSION", "1.0"),
     ("PRODUCT_BUNDLE_IDENTIFIER", "com.inkreader.app"),
     ("PRODUCT_NAME", "\"$(TARGET_NAME)\""),
-    ("SUPPORTED_PLATFORMS", "iphoneos iphonesimulator"),
+    # 多个值必须整体加引号，否则 pbxproj 解析失败（Xcode 报 project is damaged）
+    ("SUPPORTED_PLATFORMS", "\"iphoneos iphonesimulator\""),
     ("SWIFT_VERSION", "5.0"),
     ("TARGETED_DEVICE_FAMILY", "\"1,2\""),
 ]
