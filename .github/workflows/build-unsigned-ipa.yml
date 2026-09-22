@@ -27,12 +27,22 @@ jobs:
       - name: 静态自检（文件是否漏登记 / 括号配平）
         run: python3 tools/check_sources.py
 
-      - name: 解析 SPM 依赖（ZIPFoundation）
+      - name: 工程信息（确认 scheme 有没有被识别）
         run: |
+          xcodebuild -list -project InkReader.xcodeproj || true
+          echo "-----"
+          ls -la InkReader.xcodeproj/xcshareddata/xcschemes/ || true
+
+      - name: 解析 SPM 依赖（ZIPFoundation）
+        # 解析失败不阻断：编译那步会自动再解析一次，
+        # 这样即使解析有问题也能看到真正的编译错误
+        continue-on-error: true
+        run: |
+          set -o pipefail
           xcodebuild \
             -project InkReader.xcodeproj \
             -scheme InkReader \
-            -resolvePackageDependencies
+            -resolvePackageDependencies 2>&1 | tail -n 60
 
       - name: 编译（关闭签名，只要产物）
         run: |
