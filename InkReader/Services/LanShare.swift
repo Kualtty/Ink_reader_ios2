@@ -50,9 +50,24 @@ enum LanAddress {
         var result: [(host: String, port: Int)] = []
         for data in service.addresses ?? [] {
             guard data.count >= MemoryLayout<sockaddr_in>.size else { continue }
-            let family = data.withUnsafeBytes { $0.load(as: sockaddr.self) }.sa_family
-            guard family == UInt8(AF_INET) else { continue }
-            var sin = data.withUnsafeBytes { $0.load(as: sockaddr_in.self) }
+            // Data 的字节不保证内存对齐，直接 load(as:) 会 trap，一律用 memcpy 拷出来
+            var sa = sockaddr()
+            withUnsafeMutablePointer(to: &sa) { dst in
+                data.withUnsafeBytes { src in
+                    if let base = src.baseAddress {
+                        memcpy(dst, base, min(MemoryLayout<sockaddr>.size, src.count))
+                    }
+                }
+            }
+            guard sa.sa_family == UInt8(AF_INET) else { continue }
+            var sin = sockaddr_in()
+            withUnsafeMutablePointer(to: &sin) { dst in
+                data.withUnsafeBytes { src in
+                    if let base = src.baseAddress {
+                        memcpy(dst, base, min(MemoryLayout<sockaddr_in>.size, src.count))
+                    }
+                }
+            }
             var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
             let code = withUnsafeMutablePointer(to: &sin) { ptr in
                 ptr.withMemoryRebound(to: sockaddr.self, capacity: 1) { sa in
