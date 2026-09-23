@@ -8,6 +8,7 @@
 - 依赖：仅一个 SPM 包 [ZIPFoundation](https://github.com/weichsel/ZIPFoundation)（用于 CBZ/ZIP/EPUB 解压和整库备份，Xcode 会自动拉取）
 
 > 📐 **代码结构、每个文件的职责、数据存放位置、改代码前的注意事项**：见 [ARCHITECTURE.md](ARCHITECTURE.md)
+> 📲 **ipa 编出来之后怎么装到 iPad（Windows + 免费 Apple ID，含 7 天重签、常见报错）**：见 [INSTALL-iPad.md](INSTALL-iPad.md)
 
 ---
 
