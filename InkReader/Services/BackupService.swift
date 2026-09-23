@@ -96,7 +96,10 @@ enum BackupService {
         let bookIds = Set(books.map { $0.id })
 
         // 1) 元数据
-        let manifest = BackupManifest(bookCount: books.count, bookIds: only)
+        // 清单记实际导出的书：only 为 nil 表示全量，这时记 nil 反而丢信息。
+        // 排序是为了同一个书架导两次能拿到一样的 manifest。
+        let exportedIds = books.map { $0.id }.sorted { $0.uuidString < $1.uuidString }
+        let manifest = BackupManifest(bookCount: books.count, bookIds: exportedIds)
         try write(manifest, to: staging.appendingPathComponent("manifest.json"))
         try write(books, to: staging.appendingPathComponent("library.json"))
         try write(library.settings, to: staging.appendingPathComponent("readingsettings.json"))

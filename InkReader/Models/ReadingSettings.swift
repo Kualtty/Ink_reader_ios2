@@ -299,7 +299,7 @@ struct ReadingSettings: Codable, Equatable {
 
     /// 正文富文本属性
     var baseAttributes: [NSAttributedString.Key: Any] {
-        var attrs: [NSAttributedString.Key: Any] = [
+        let attrs: [NSAttributedString.Key: Any] = [
             .font: uiFont,
             .foregroundColor: uiTextColor,
             .paragraphStyle: paragraphStyle,
@@ -387,7 +387,8 @@ extension ReadingSettings {
 
 enum ReaderFonts {
     static let available: [(name: String, display: String)] = {
-        var list: [(String, String)] = [("", "系统默认")]
+        // 元组要带上标签，下面 $0.name 才用得了
+        var list: [(name: String, display: String)] = [("", "系统默认")]
         let preferred = [
             "PingFang SC", "Songti SC", "STSong", "Kaiti SC", "STKaiti",
             "Heiti SC", "Yuanti SC", "Hiragino Sans GB",
