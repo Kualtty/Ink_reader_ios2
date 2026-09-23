@@ -168,8 +168,8 @@ final class ComicPageStore: ObservableObject {
         annotations.remapPages(bookId: source.id, mapping: mapping, to: target.id)
 
         // 顺序要重来：新压缩包里的名字是重新编号的
-        resetOrder(target.id)
-        clear(source.id)
+        resetOrder(bookId: target.id)
+        clear(bookId: source.id)
         resetCache(target.id)
         resetCache(source.id)
 
@@ -220,8 +220,8 @@ final class ComicPageStore: ObservableObject {
         for page in index..<pages.count { mapping[page] = page - index }
         annotations.remapPages(bookId: book.id, mapping: mapping, to: newId)
 
-        resetOrder(book.id)
-        resetOrder(newId)
+        resetOrder(bookId: book.id)
+        resetOrder(bookId: newId)
         resetCache(book.id)
         resetCache(newId)
 
