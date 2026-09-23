@@ -446,8 +446,9 @@ final class ReaderViewModel: ObservableObject {
         guard autoPlaying else { return }
         let interval = max(0.5, settings.autoPlaySpeed)
         let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
+            // 强引用绑定放在 Task 外面：Task 的闭包是 @Sendable，里面不能再读 weak var
+            guard let self = self else { return }
             Task { @MainActor in
-                guard let self else { return }
                 self.autoTick += 1
             }
         }

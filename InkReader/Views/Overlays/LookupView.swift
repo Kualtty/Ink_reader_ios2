@@ -149,7 +149,7 @@ struct LookupSheet: View {
                     ? nil
                     : UIReferenceLibraryViewController.dictionaryHasDefinition(forTerm: word)
             }
-            .onChange(of: term) { newValue in
+            .onChange(of: term) { _, newValue in
                 let word = newValue.trimmed
                 hasDefinition = word.isEmpty
                     ? nil

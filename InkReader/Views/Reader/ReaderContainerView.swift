@@ -142,13 +142,13 @@ struct ReaderContainerView: View {
             vm.stopSpeech()
             VolumeKeyObserver.shared.setEnabled(false)
         }
-        .onChange(of: vm.settings.volumeKeyTurn) { enabled in
+        .onChange(of: vm.settings.volumeKeyTurn) { _, enabled in
             configureVolumeKeys(enabled)
         }
-        .onChange(of: vm.settings.direction) { _ in
+        .onChange(of: vm.settings.direction) { _, _ in
             vm.settingsDidChange()
         }
-        .onChange(of: vm.toast) { _ in
+        .onChange(of: vm.toast) { _, _ in
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) {
                 if vm.toast != nil { vm.toast = nil }
             }
@@ -442,7 +442,7 @@ struct ReaderContainerView: View {
                 }
                 Slider(value: $vm.settings.autoPlaySpeed, in: 1...60, step: 0.5)
                     .frame(width: 120)
-                    .onChange(of: vm.settings.autoPlaySpeed) { _ in vm.restartAutoTimer() }
+                    .onChange(of: vm.settings.autoPlaySpeed) { _, _ in vm.restartAutoTimer() }
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
@@ -477,7 +477,7 @@ struct ReaderContainerView: View {
 
                 Slider(value: $vm.settings.speechRate, in: 0.1...1.0, step: 0.05)
                     .frame(width: 110)
-                    .onChange(of: vm.settings.speechRate) { _ in vm.speechRateDidChange() }
+                    .onChange(of: vm.settings.speechRate) { _, _ in vm.speechRateDidChange() }
 
                 Button {
                     vm.stopSpeech()

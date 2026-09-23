@@ -99,7 +99,7 @@ struct LanShareView: View {
                         .transition(.opacity)
                 }
             }
-            .onChange(of: toast) { _ in
+            .onChange(of: toast) { _, _ in
                 guard toast != nil else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) { toast = nil }
             }

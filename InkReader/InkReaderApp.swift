@@ -26,7 +26,7 @@ struct InkReaderApp: App {
                     for book in imported { library.add(book) }
                     UIApplication.shared.isIdleTimerDisabled = library.settings.keepScreenOn
                 }
-                .onChange(of: library.settings.keepScreenOn) { enabled in
+                .onChange(of: library.settings.keepScreenOn) { _, enabled in
                     UIApplication.shared.isIdleTimerDisabled = enabled
                 }
         }

@@ -94,7 +94,7 @@ struct ZoomableImageView: View {
             }
         }
         .onAppear { load() }
-        .onChange(of: url) { _ in
+        .onChange(of: url) { _, _ in
             image = nil
             scale = 1; lastScale = 1; offset = .zero; lastOffset = .zero
             load()
@@ -126,7 +126,7 @@ struct ComicPageImage: View {
             }
         }
         .onAppear { load() }
-        .onChange(of: url) { _ in image = nil; load() }
+        .onChange(of: url) { _, _ in image = nil; load() }
     }
 
     private func load() {
@@ -175,7 +175,7 @@ struct ComicReaderContainer: View {
                 }
             }
             .onAppear { vm.viewSizeDidChange(geo.size) }
-            .onChange(of: geo.size) { vm.viewSizeDidChange($0) }
+            .onChange(of: geo.size) { _, value in vm.viewSizeDidChange(value) }
         }
         .background(vm.settings.backgroundColor)
         .ignoresSafeArea()
@@ -203,7 +203,7 @@ struct ComicReaderContainer: View {
         .tabViewStyle(.page(indexDisplayMode: .never))
         // 右→左：把整个分页容器镜像过来，翻页方向自然就反了（系统行为，不用手写手势）
         .environment(\.layoutDirection, rtl ? .rightToLeft : .leftToRight)
-        .onChange(of: vm.autoTick) { _ in vm.next() }
+        .onChange(of: vm.autoTick) { _, _ in vm.next() }
     }
 
     @ViewBuilder
@@ -232,10 +232,10 @@ struct ComicReaderContainer: View {
                 .scrollTargetLayout()
             }
             .scrollPosition(id: $topID)
-            .onChange(of: topID) { newValue in
+            .onChange(of: topID) { _, newValue in
                 if let value = newValue { vm.goToPage(value) }
             }
-            .onChange(of: vm.autoTick) { _ in
+            .onChange(of: vm.autoTick) { _, _ in
                 let next = min(vm.currentPage + 1, max(0, vm.comicImages.count - 1))
                 withAnimation(.easeOut(duration: max(0.2, vm.settings.autoPlaySpeed))) {
                     proxy.scrollTo(next, anchor: .top)

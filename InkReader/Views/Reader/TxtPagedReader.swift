@@ -26,12 +26,12 @@ struct TxtPagedReader: View {
             .tabViewStyle(.page(indexDisplayMode: .never))
             .background(vm.settings.backgroundColor)
             .onAppear { vm.viewSizeDidChange(geo.size) }
-            .onChange(of: geo.size) { newSize in
+            .onChange(of: geo.size) { _, newSize in
                 vm.viewSizeDidChange(newSize)
             }
         }
         .ignoresSafeArea()
-        .onChange(of: vm.autoTick) { _ in
+        .onChange(of: vm.autoTick) { _, _ in
             vm.next()
         }
     }

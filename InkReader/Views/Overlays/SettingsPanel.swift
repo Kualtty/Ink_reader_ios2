@@ -137,11 +137,13 @@ struct SettingsPanel: View {
                 }
 
                 // MARK: 播读
-                Section("播读") {
+                // 注意：SwiftUI 没有 Section("标题"){} footer:{} 这个重载，
+                // 带 footer 时必须写成 Section{} header:{} footer:{} 的形式
+                Section {
                     SliderRow(title: "语速", value: $vm.settings.speechRate, range: 0.1...1.0, step: 0.05) {
                         String(format: "%.2f×", vm.settings.speechRate)
                     }
-                    .onChange(of: vm.settings.speechRate) { _ in vm.speechRateDidChange() }
+                    .onChange(of: vm.settings.speechRate) { _, _ in vm.speechRateDidChange() }
 
                     Picker("语音", selection: $vm.settings.speechVoiceId) {
                         Text("自动（按内容挑）").tag("")
@@ -155,6 +157,8 @@ struct SettingsPanel: View {
                     } label: {
                         Label("试听一句", systemImage: "speaker.wave.2")
                     }
+                } header: {
+                    Text("播读")
                 } footer: {
                     Text("可用的语音取决于 iPad 在「设置 → 辅助功能 → 朗读内容 → 声音」里下载了哪些。列表只列中英文，没看到想要的先去系统里下载。")
                 }

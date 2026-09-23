@@ -58,7 +58,11 @@ final class PdfSearchViewModel: ObservableObject {
 
         isSearching = true
         errorMessage = nil
+        // weak self 必须在 Task 闭包开头就绑定成强引用：
+        // @Sendable 闭包里不能再读 weak var，否则报
+        // “reference to captured var 'self' in concurrently-executing code”
         runningTask = Task.detached(priority: .userInitiated) { [weak self] in
+            guard let self = self else { return }
             let selections = document.findString(keyword, withOptions: [.caseInsensitive, .diacriticInsensitive])
             var results: [PdfSearchHit] = []
             for selection in selections {
@@ -73,7 +77,6 @@ final class PdfSearchViewModel: ObservableObject {
 
             let capped = Array(results.prefix(1000))
             await MainActor.run {
-                guard let self else { return }
                 self.hits = capped
                 self.isSearching = false
                 self.hasSearched = true
@@ -82,7 +85,9 @@ final class PdfSearchViewModel: ObservableObject {
     }
 
     /// 命中前后各带一点上下文，只有一个词的时候看不出在哪
-    private static func snippet(around selection: PDFSelection, on page: PDFPage) -> String {
+    /// nonisolated：这是纯字符串处理，不碰任何主线程状态，
+    /// 这样后台线程里可以直接同步调用，不用每次命中都 await 回主线程
+    private nonisolated static func snippet(around selection: PDFSelection, on page: PDFPage) -> String {
         let hit = (selection.string ?? "").replacingOccurrences(of: "\n", with: " ")
         guard !hit.isEmpty else { return "" }
         guard let pageText = page.string, !pageText.isEmpty else { return hit }
@@ -128,7 +133,7 @@ struct PdfSearchView: View {
             }
             .searchable(text: $searcher.query, prompt: "搜索 PDF 正文")
             .onSubmit(of: .search) { searcher.run() }
-            .onChange(of: searcher.query) { _ in
+            .onChange(of: searcher.query) { _, _ in
                 // 中文一个字就能搜，但一个字结果太多；两个字起实时搜，一个字等回车
                 if searcher.query.trimmed.count >= 2 { searcher.run() }
             }

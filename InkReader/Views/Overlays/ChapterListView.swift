@@ -102,7 +102,7 @@ struct TextSearchView: View {
             }
             .searchable(text: $query, prompt: "搜索正文")
             .onSubmit(of: .search) { runSearch() }
-            .onChange(of: query) { _ in
+            .onChange(of: query) { _, _ in
                 if query.count >= 2 { runSearch() }
             }
             .navigationTitle("搜索")
@@ -136,8 +136,10 @@ struct TextSearchView: View {
                 if next >= ns.length { break }
                 searchRange = NSRange(location: next, length: ns.length - next)
             }
+            // 先固化成 let 再回主线程：@Sendable 闭包里不能读写被捕获的 var
+            let snapshot = found
             await MainActor.run {
-                self.results = found
+                self.results = snapshot
                 self.isSearching = false
             }
         }

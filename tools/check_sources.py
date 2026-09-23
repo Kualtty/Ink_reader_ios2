@@ -90,6 +90,70 @@ if bad:
 else:
     print("  ✓ 括号全部配平")
 
+# ---- SwiftUI Section 标题 + footer/header 混用 ----
+# 踩过的坑：SwiftUI 里带 footer 的 Section 只有 Section{} header:{} footer:{} 这一种写法，
+# Section("标题") { ... } footer: { ... } 根本不存在这个重载，编译器只会甩出
+# “generic parameter 'Content' could not be inferred” 这种看不懂的报错。
+sec_bad = []
+for n in seen:
+    for dirpath, _, files in os.walk(SRC):
+        if n not in files:
+            continue
+        lines = open(os.path.join(dirpath, n), encoding="utf-8").read().splitlines()
+        for i, ln in enumerate(lines):
+            m = re.match(r'^(\s*)Section\(".*"\)\s*\{\s*$', ln)
+            if not m:
+                continue
+            indent = len(m.group(1))
+            for j in range(i + 1, min(i + 300, len(lines))):
+                l2 = lines[j]
+                if not l2.strip():
+                    continue
+                cur = len(l2) - len(l2.lstrip())
+                if cur < indent:            # 缩进变浅，Section 已经结束了
+                    break
+                if cur == indent and re.match(r'^\s*\}\s*(footer|header):', l2):
+                    sec_bad.append("%s:%d 标题式 Section 不能配 footer/header，"
+                                   "改成 Section{} header:{} footer:{}"
+                                   % (n, i + 1))
+                    break
+                if cur == indent and l2.strip() == "}":
+                    break
+        break
+
+if sec_bad:
+    print("  ✗ Section 用法有误：")
+    for b in sec_bad:
+        print("     -", b)
+else:
+    print("  ✓ Section 用法检查通过")
+
+# ---- onChange 单参数闭包（iPadOS 17 起已废弃）----
+# 新签名是 onChange(of:initial:_:)，闭包为 (旧值, 新值)；只写一个参数就会命中废弃版本刷警告，
+# 而用 $0 的写法更危险 —— 两参数闭包里 $0 是「旧值」，不改会静默拿错值。
+oc_bad = []
+for n in seen:
+    for dirpath, _, files in os.walk(SRC):
+        if n not in files:
+            continue
+        for i, ln in enumerate(open(os.path.join(dirpath, n), encoding="utf-8").read().splitlines(), 1):
+            if ".onChange(of:" not in ln:
+                continue
+            m = re.search(r"\{([^{}]*?) in", ln)
+            if m:
+                if m.group(1).count(",") == 0:      # 一个参数 = 废弃的单参数版本
+                    oc_bad.append("%s:%d 闭包只有一个参数" % (n, i))
+            elif "$0" in ln:
+                oc_bad.append("%s:%d 用 $0 取值（两参数闭包里 $0 是旧值）" % (n, i))
+        break
+
+if oc_bad:
+    print("  ✗ onChange 写法过时：")
+    for b in oc_bad:
+        print("     -", b)
+else:
+    print("  ✓ onChange 都是 iPadOS 17 的两参数写法")
+
 # ---- pbxproj 语法体检 ----
 # 踩过的坑：SUPPORTED_PLATFORMS = iphoneos iphonesimulator（多个值没加引号）
 # 会让 Xcode 直接报 "The project is damaged and cannot be opened"，CI 上表现为 exit 74。
@@ -125,7 +189,8 @@ if pbx_bad:
 else:
     print("  ✓ pbxproj 语法体检通过")
 
-ok = not missing and not orphan and not bad and not pbx_bad
+ok = not missing and not orphan and not bad and not pbx_bad \
+    and not sec_bad and not oc_bad
 print("RESULT:", "OK" if ok else "FAILED")
 _LOG.flush()
 _LOG.close()

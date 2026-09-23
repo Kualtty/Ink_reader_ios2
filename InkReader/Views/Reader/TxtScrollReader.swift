@@ -226,7 +226,7 @@ struct TxtScrollReaderContainer: View {
             )
             .ignoresSafeArea()
             .onAppear { vm.viewSizeDidChange(geo.size) }
-            .onChange(of: geo.size) { vm.viewSizeDidChange($0) }
+            .onChange(of: geo.size) { _, value in vm.viewSizeDidChange(value) }
         }
     }
 }
