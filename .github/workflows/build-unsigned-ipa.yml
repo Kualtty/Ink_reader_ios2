@@ -45,8 +45,11 @@ jobs:
             -resolvePackageDependencies 2>&1 | tail -n 60
 
       - name: 编译（关闭签名，只要产物）
+        # 注意：不能直接 2>&1 | tail，日志一旦被截断，真正的 error 会被警告挤掉，
+        # 只剩一行 BUILD FAILED 却看不到原因（踩过一次）。
+        # 这里先存成 build.log，再单独把 error 全捞出来打印。
         run: |
-          set -o pipefail
+          set +e
           xcodebuild \
             -project InkReader.xcodeproj \
             -scheme InkReader \
@@ -57,7 +60,16 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
-            2>&1 | tail -n 80
+            > build.log 2>&1
+          code=$?
+          echo "===== 错误汇总（error:）====="
+          grep -n -A 3 -- " error: " build.log | head -n 120 || echo "（没有匹配到 error）"
+          echo "===== 警告条数 ====="
+          grep -c -- " warning: " build.log || true
+          echo "===== 日志末尾 60 行 ====="
+          tail -n 60 build.log
+          echo "===== xcodebuild 退出码：$code ====="
+          exit $code
 
       - name: 确认 .app 出来了
         run: |
