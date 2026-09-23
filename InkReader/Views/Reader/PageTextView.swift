@@ -124,14 +124,15 @@ struct PageTextView: UIViewRepresentable {
             // 太长的选段不适合查词，词典和网页都扛不住一整段
             if selected.trimmed.count <= 30 {
                 extras.append(UIAction(title: "查词", image: UIImage(systemName: "character.book.closed")) { _ in
-                    self.parent.onSelect(globalRange(range), selected, .lookup)
+                    // escaping 闭包里调自己的方法必须写 self.，不然捕获语义不明确
+                    self.parent.onSelect(self.globalRange(range), selected, .lookup)
                 })
             }
             extras.append(UIAction(title: "朗读", image: UIImage(systemName: "speaker.wave.2")) { _ in
-                self.parent.onSelect(globalRange(range), selected, .speak)
+                self.parent.onSelect(self.globalRange(range), selected, .speak)
             })
             extras.append(UIAction(title: "编辑原文", image: UIImage(systemName: "pencil.and.outline")) { _ in
-                self.parent.onSelect(globalRange(range), selected, .revise)
+                self.parent.onSelect(self.globalRange(range), selected, .revise)
             })
             let menu = UIMenu(children: suggestedActions + [highlightAction, noteAction] + extras)
             return menu

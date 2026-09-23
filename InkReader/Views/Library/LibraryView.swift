@@ -170,7 +170,7 @@ struct LibraryView: View {
                 renameTarget = nil
             }
             Button("取消", role: .cancel) { renameTarget = nil }
-        } message: {
+        } message: { _ in
             Text("只改书架上的显示名，不动文件本身")
         }
         .confirmationDialog(

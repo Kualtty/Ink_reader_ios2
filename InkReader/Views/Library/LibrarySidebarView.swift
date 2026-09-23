@@ -76,7 +76,10 @@ struct LibrarySidebarView: View {
     let onManageCollections: () -> Void
 
     var body: some View {
-        List(selection: $selection) {
+        // iOS 上只有 List(selection: Binding<SelectionValue?>) 这个重载，
+        // 非 optional 那版是 macOS 独有的（编译器直接标了 unavailable in iOS），
+        // 所以这里包一层 optional 绑定。
+        List(selection: optionalSelection) {
             Section("书库") {
                 row(.filter(.all), title: "全部", icon: "books.vertical", count: totalCount)
                 row(.filter(.reading), title: LibraryFilter.reading.title, icon: LibraryFilter.reading.icon, count: counts[.reading] ?? 0)
@@ -119,6 +122,15 @@ struct LibrarySidebarView: View {
     }
 
     // MARK: - 行
+
+    private var optionalSelection: Binding<SidebarItem?> {
+        Binding(
+            get: { selection },
+            set: { newValue in
+                if let newValue { selection = newValue }
+            }
+        )
+    }
 
     @ViewBuilder
     private func row(_ item: SidebarItem, title: String, icon: String, count: Int) -> some View {
