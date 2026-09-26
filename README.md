@@ -10,6 +10,9 @@
 > 📐 **代码结构、每个文件的职责、数据存放位置、改代码前的注意事项**：见 [ARCHITECTURE.md](ARCHITECTURE.md)
 > 📲 **ipa 编出来之后怎么装到 iPad（Windows + 免费 Apple ID，含 7 天重签、常见报错）**：见 [INSTALL-iPad.md](INSTALL-iPad.md)
 
+> 🙋 **没有 Mac 也能用**：编译交给 GitHub Actions，安装交给 Windows 上的 Sideloadly，
+> 全程不需要 Mac。直接看 [第一节](#一把-app-装到-ipad-上不需要-mac)。
+
 ---
 
 ## 〇、**没有 Mac 怎么办**（不想买 / 借不到）
@@ -52,13 +55,35 @@ M1 Mac mini 二手约 2000–3000 元，一次投入，之后随便调试，省�
 
 ---
 
-## 一、把 App 装到 iPad 上
+## 一、把 App 装到 iPad 上（**不需要 Mac**）
 
-> **目标设备是 iPad（iPadOS）。** Mac 在这里**只是编译机** —— iOS App 只能用 Xcode 编译，
-> 而 Xcode 只出 macOS 版。除此之外整套交互、界面、存储都是按 iPad 的触屏 + Apple Pencil
-> + 横竖屏设计的，Mac 上不会跑这个 App（也没有 Mac 版）。
+> ⚠️ **下面「（可选）如果你有一台 Mac」那节是给有 Mac 的人看的，没有 Mac 直接跳过。**
+> 你用的 GitHub Actions 编出来的 ipa，和 Xcode 编的是同一个东西，装的过程**全在 Windows 上完成**。
 
-步骤：
+完整步骤（含 7 天重签、常见报错）见 [INSTALL-iPad.md](INSTALL-iPad.md)，这里只记要点：
+
+1. 仓库 → **Actions** → 绿色 ✓ 那次运行 → 拉到最下面 **Artifacts** → `InkReader-unsigned-ipa`
+   → 下载（是个 zip）→ 解压得到 `InkReader-unsigned.ipa`
+2. Windows 装 [Sideloadly](https://sideloadly.io/) → iPad 数据线接电脑、点「信任」
+   → 选中 ipa → 填 Apple ID（建议小号）→ **Start**
+3. iPad 上打开 **设置 → 隐私与安全性 → 拉到最底部 → 开发者模式** → 打开 → 按提示重启
+   （这个选项**平时是隐藏的**，做完第 2 步才会出现）
+4. **设置 → 通用 → VPN 与设备管理** → 点你的 Apple ID → **信任**
+5. 回桌面点开「墨阅」
+
+免费 Apple ID 签名 **7 天过期**，到期把第 2 步再点一次 Start 就行，**不用重新编译**。
+
+### 签名与有效期
+
+| 账号类型 | 能做什么 | 限制 |
+| --- | --- | --- |
+| 免费 Apple ID | 真机安装（装到 iPad） | 签名 **7 天** 过期，到期插电脑重签一次即可；最多 3 个 App ID |
+| 付费开发者（¥688/年） | 真机 + TestFlight + 上架 | 签名有效期 1 年 |
+
+### （可选）如果你有一台 Mac
+
+> 这一段是「有 Mac 时的便利做法」：能直接 Cmd+R 调试、改 UI 更快。
+> **没有 Mac 完全不影响使用**，跳过即可。
 
 1. 把整个 `InkReader` 文件夹拷贝到 Mac（U 盘、AirDrop、Git 都行）。
 2. 双击 `InkReader.xcodeproj` 用 Xcode 打开（Xcode 15+）。
@@ -70,15 +95,8 @@ M1 Mac mini 二手约 2000–3000 元，一次投入，之后随便调试，省�
 5. **用数据线把 iPad 接到 Mac**，顶部设备选择你的 iPad → `Cmd + R`。
    第一次需要在 iPad 的「设置 → 通用 → VPN 与设备管理」里信任一下开发者证书。
 
-### 签名与有效期
-
-| 账号类型 | 能做什么 | 限制 |
-| --- | --- | --- |
-| 免费 Apple ID | 真机调试（装到 iPad） | 签名 **7 天** 过期，到期重新连 Mac 点一次 Run 即可；最多 3 个 App ID |
-| 付费开发者（¥688/年） | 真机 + TestFlight + 上架 | 签名有效期 1 年 |
-
-> ⚠️ **没法在 Windows 上直接产出 ipa**，也不能绕过 Mac 无线装到 iPad。
-> 没有 Mac 可以用云 Mac（MacinCloud、MacStadium）或 GitHub Actions 的 macOS runner 编译。
+> ⚠️ **没法在 Windows 上直接编译出 ipa**，但可以**在 Windows 上把编好的 ipa 装进 iPad**
+> （就是上面第一节的做法）。编译这一步靠 GitHub Actions 的 macOS runner 免费完成。
 
 ---
 
