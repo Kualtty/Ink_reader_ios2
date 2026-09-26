@@ -18,3 +18,4 @@ __pycache__/
 # 打包产物
 dist/
 *.ipa
+InkReader-unsigned-ipa*.zip
